@@ -1,3 +1,6 @@
+import { UserService } from './user.service';
+import { AuthGuard } from './auth-guard.service';
+import { AuthService } from './auth.service';
 import { environment } from './../environments/environment';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -18,6 +21,7 @@ import { MyOrdersComponent } from './my-orders/my-orders.component';
 import { AdminProductsComponent } from './admin/admin-products/admin-products.component';
 import { AdminOrdersComponent } from './admin/admin-orders/admin-orders.component';
 import { LoginComponent } from './login/login.component';
+import { AdminAuthGuard } from './admin-auth-guard.service';
 
 
 @NgModule({
@@ -42,17 +46,32 @@ import { LoginComponent } from './login/login.component';
     NgbModule.forRoot(),
     RouterModule.forRoot([
       { path: '', component: HomeComponent},
+      { path: 'login', component: LoginComponent},
       { path: 'products', component: ProductsComponent},
       { path: 'shopping-cart', component: ShoppingCartComponent},
-      { path: 'my/orders', component: MyOrdersComponent},
-      { path: 'check-out', component: CheckOutComponent},
-      { path: 'order-success', component: OrderSuccessComponent},
-      { path: 'login', component: LoginComponent},
-      { path: 'admin/products', component: AdminProductsComponent},
-      { path: 'admin/orders', component: AdminOrdersComponent},
+
+      { path: 'my/orders', component: MyOrdersComponent, canActivate: [AuthGuard] },
+      { path: 'check-out', component: CheckOutComponent, canActivate: [AuthGuard] },
+      { path: 'order-success', component: OrderSuccessComponent, canActivate: [AuthGuard]},
+
+      {
+        path: 'admin/products',
+        component: AdminProductsComponent,
+        canActivate: [AuthGuard, AdminAuthGuard]
+      },
+      { path: 'admin/orders',
+        component: AdminOrdersComponent,
+        canActivate: [AuthGuard, AdminAuthGuard]
+      },
     ])
   ],
-  providers: [],
+  providers: [
+    AuthService,
+    AuthGuard,
+    AdminAuthGuard,
+    UserService
+
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
