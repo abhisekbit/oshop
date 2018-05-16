@@ -6,7 +6,7 @@ import * as firebase from 'firebase';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/Observable/of';
+import 'rxjs/add/observable/of';
 
 @Injectable()
 export class AuthService {
