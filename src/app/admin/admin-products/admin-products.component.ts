@@ -12,7 +12,6 @@ import { DataTableResource } from 'angular5-data-table';
 export class AdminProductsComponent implements OnInit, OnDestroy {
 
   products: Product[];
-  filteredProducts: any[];
   subscription: Subscription;
 
   tableResource: DataTableResource<Product>;
@@ -22,7 +21,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
   constructor(private productService: ProductService) {
     this.subscription =  this.productService.getAll()
       .subscribe(products => {
-        this.filteredProducts = this.products = products;
+        this.products = products;
 
         this.tableResource = new DataTableResource(products);
         this.initializeTable(products);
@@ -30,7 +29,10 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
    }
 
    private initializeTable(products: Product[]) {
-    this.tableResource.query({ offset: 0})
+    
+    this.tableResource = new DataTableResource(products);
+
+    this.tableResource.query({ offset: 0,limit: 10})
       .then(items => this.items = items);
     this.tableResource.count()
       .then(count => this.itemCount = count);
@@ -44,10 +46,12 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
    }
 
   filter(query: string) {
-    this.filteredProducts = (query) ?
+    
+    let filteredProducts = (query) ?
       this.products.filter(p => p.title.toLowerCase().includes(query.toLowerCase())) :
         this.products;
-    this.initializeTable(this.filteredProducts);
+    
+    this.initializeTable(filteredProducts);
   }
 
   ngOnInit() {
