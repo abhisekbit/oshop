@@ -15,7 +15,10 @@ export class BsNavbarComponent implements OnInit{
 
   appUser: AppUser;
   cart$: Observable<ShoppingCart>;
-
+  collapsed = true;
+     toggleCollapsed(): void {
+       this.collapsed = !this.collapsed;
+     }
 
   constructor(private auth: AuthService,
               private shoppingCartService: ShoppingCartService) {    
@@ -27,7 +30,6 @@ export class BsNavbarComponent implements OnInit{
   async ngOnInit() {
     this.auth.appUser$.subscribe(appUser => this.appUser = appUser);
     this.cart$ = await this.shoppingCartService.getCart();
-   
   }
 
 
